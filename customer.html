@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ตรวจสอบสถานะงาน | Zeni ลูกค้า</title>
+  <style>
+    body { font-family: 'Arial', sans-serif; padding: 30px; background: #f0f0f0; }
+    .box { background: white; padding: 20px; border-radius: 10px; max-width: 400px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    input, button { padding: 10px; margin-top: 10px; width: 100%; font-size: 16px; }
+    .result { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>ตรวจสอบสถานะงาน</h2>
+    <input type="text" id="codeInput" placeholder="กรอกโค้ดของคุณ เช่น AZ1Df">
+    <button onclick="checkStatus()">ดูสถานะ</button>
+    <div class="result" id="resultBox"></div>
+  </div>
+
+  <script>
+    const jobData = JSON.parse(localStorage.getItem("zeniJobs") || "{}");
+
+    function checkStatus() {
+      const code = document.getElementById("codeInput").value.trim();
+      const data = jobData[code];
+      const resultBox = document.getElementById("resultBox");
+
+      if (data) {
+        const remaining = data.ordered - data.done;
+        resultBox.innerHTML = `
+          <p><strong>โค้ดลูกค้า:</strong> ${code}</p>
+          <p><strong>จำนวนที่สั่ง:</strong> ${data.ordered}</p>
+          <p><strong>จำนวนที่เหลือ:</strong> ${remaining}</p>
+          <p><strong>สถานะ:</strong> ${data.status}</p>
+        `;
+      } else {
+        resultBox.innerHTML = `<p style="color:red;">ไม่พบข้อมูลโค้ดนี้ กรุณาตรวจสอบอีกครั้ง</p>`;
+      }
+    }
+  </script>
+</body>
+</html>
